@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Signal Tracker™</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0b1120;
+      color: #e8eaf0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #0b1120;
+      border-bottom: 1px solid #1e2d45;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo-area p {
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #4a9ebe;
+      margin-bottom: 3px;
+    }
+
+    .logo-area h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #e8eaf0;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #4a9ebe;
+      background: #0d2035;
+      border: 1px solid #1e3a55;
+      padding: 5px 12px;
+      border-radius: 99px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4a9ebe;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: #111c2e;
+      border: 1px solid #1e2d45;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #6b82a0;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 600;
+      color: #e8eaf0;
+    }
+
+    .stat-value.red   { color: #e05555; }
+    .stat-value.amber { color: #d4922a; }
+
+    #map {
+      width: 100%;
+      height: 420px;
+      border-radius: 12px;
+      border: 1px solid #1e2d45;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 1.5rem;
+    }
+
+    .leg {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #8a9ab5;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .feed-card {
+      background: #111c2e;
+      border: 1px solid #1e2d45;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .feed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .feed-title {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #6b82a0;
+    }
+
+    #feedStatus {
+      font-size: 11px;
+      color: #4a9ebe;
+    }
+
+    .report-row {
+      padding: 12px 0;
+      border-bottom: 1px solid #1a2840;
+    }
+
+    .report-row:last-child { border-bottom: none; }
+
+    .report-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .community-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #e8eaf0;
+    }
+
+    .parish-name {
+      font-size: 12px;
+      color: #6b82a0;
+      margin-left: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 10px;
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+
+    .b-red    { background: #2a1515; color: #e05555; border: 1px solid #3d1e1e; }
+    .b-amber  { background: #2a1e0a; color: #d4922a; border: 1px solid #3d2c10; }
+    .b-green  { background: #0f2318; color: #4caf72; border: 1px solid #163320; }
+    .b-teal   { background: #0a2020; color: #3eb8a0; border: 1px solid #103030; }
+    .b-gray   { background: #1a2030; color: #8a9ab5; border: 1px solid #232e42; }
+
+    .report-meta {
+      font-size: 11px;
+      color: #4a5a75;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #1e3a55;
+      background: #111c2e;
+      color: #4a9ebe;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .15s;
+    }
+
+    .btn:hover { background: #162640; }
+    .btn-primary { background: #0d3a5a; border-color: #1e5a80; color: #7fd0f5; }
+    .btn-primary:hover { background: #0f4570; }
+
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1px solid #1e3a55;
+      background: transparent;
+      color: #4a9ebe;
+      cursor: pointer;
+    }
+
+    .refresh-btn:hover { background: #111c2e; }
+
+    @keyframes pulse-ring {
+      0%   { transform: translate(-50%,-50%) scale(1);   opacity: .4; }
+      70%  { transform: translate(-50%,-50%) scale(2.8); opacity: 0; }
+      100% { transform: translate(-50%,-50%) scale(2.8); opacity: 0; }
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 11px;
+      color: #3a4a60;
+      border-top: 1px solid #1a2535;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <p>Community Intelligence System</p>
+    <h1>Water Signal Tracker™</h1>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="live-badge"><span class="live-dot"></span> Live</div>
+    <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Reports</div>
+      <div class="stat-value" id="sTotal">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Parishes</div>
+      <div class="stat-value" id="sParish">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">No Water</div>
+      <div class="stat-value red" id="sNone">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">7+ Days Out</div>
+      <div class="stat-value red" id="sLong">—</div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="legend">
+    <span class="leg"><span class="dot" style="background:#e05555;"></span>No water</span>
+    <span class="leg"><span class="dot" style="background:#d4922a;"></span>Weak pressure</span>
+    <span class="leg"><span class="dot" style="background:#4caf72;"></span>Intermittent</span>
+    <span class="leg"><span class="dot" style="background:#3eb8a0;"></span>Normal flow</span>
+  </div>
+
+  <div class="feed-card">
+    <div class="feed-header">
+      <span class="feed-title">Signal Feed</span>
+      <span id="feedStatus">Loading...</span>
+    </div>
+    <div id="feed">
+      <p style="font-size:13px;color:#4a5a75;padding:8px 0;">Fetching reports...</p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <a class="btn btn-primary" href="https://forms.gle/5eNmwgihWszuUP7NA" target="_blank">+ Submit a Report</a>
+    <a class="btn" href="https://whatsapp.com/channel/0029VbDJdL729753vNvdGU1T" target="_blank">💧 WhatsApp Channel</a>
+  </div>
+
+</div>
+
+<footer>
+  Water Signal Tracker™ · Built with community data · Powered by SYGNL Technologies
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+  const SHEET_ID = '1P2mZbeC0L1iCZczMATXNkUgSHl6aO_mCrbOAOhdD0TQ';
+  const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+
+  const STATUS = {
+    no_water: { label:'No water',      color:'#e05555', badge:'b-red'   },
+    weak:     { label:'Weak pressure', color:'#d4922a', badge:'b-amber' },
+    intermit: { label:'Intermittent',  color:'#4caf72', badge:'b-green' },
+    normal:   { label:'Normal flow',   color:'#3eb8a0', badge:'b-teal'  },
+    unknown:  { label:'Unknown',       color:'#8a9ab5', badge:'b-gray'  }
+  };
+
+  function getStatus(raw) {
+    const v = (raw||'').toLowerCase();
+    if (v.includes('no water'))  return 'no_water';
+    if (v.includes('weak'))      return 'weak';
+    if (v.includes('intermit'))  return 'intermit';
+    if (v.includes('normal'))    return 'normal';
+    return 'unknown';
+  }
+
+  const COORDS = {
+    'mt. parnassus':[12.082,-61.698],'mt parnassus':[12.082,-61.698],'mount parnassus':[12.082,-61.698],
+    'calliste':[12.058,-61.726],'caliste':[12.058,-61.726],
+    'grand anse':[12.018,-61.762],"st. george's":[12.052,-61.741],
+    'belmont':[12.075,-61.703],'true blue':[12.012,-61.751],
+    'lance aux epines':[12.001,-61.757],'morne jaloux':[12.028,-61.748],
+    'beaulieu':[12.038,-61.738],'frequente':[12.043,-61.730],
+    'tempe':[12.068,-61.710],'vendome':[12.072,-61.716],
+    'bacolet':[12.055,-61.718],'carenage':[12.057,-61.746],
+    'lagoon':[12.048,-61.744],'grenville':[12.117,-61.623],
+    'gouyave':[12.160,-61.728],'victoria':[12.197,-61.697],
+    'sauteurs':[12.218,-61.638]
+  };
+
+  const PARISH_COORDS = {
+    "st. george's":[12.052,-61.741],"st george's":[12.052,-61.741],
+    "st. david's":[12.031,-61.676],"st david's":[12.031,-61.676],
+    "st. andrew's":[12.117,-61.639],"st andrew's":[12.117,-61.639],
+    "st. patrick's":[12.217,-61.650],"st patrick's":[12.217,-61.650],
+    "st. mark's":[12.183,-61.717],"st mark's":[12.183,-61.717],
+    "st. john's":[12.150,-61.733],"st john's":[12.150,-61.733]
+  };
+
+  function getCoords(community, parish) {
+    const c = (community||'').toLowerCase().trim();
+    const p = (parish||'').toLowerCase().trim();
+    if (COORDS[c]) return COORDS[c];
+    const base = PARISH_COORDS[p] || [12.1165,-61.6789];
+    return [base[0]+(Math.random()-.5)*.025, base[1]+(Math.random()-.5)*.025];
+  }
+
+  function formatTime(ts) {
+    try {
+      const d = new Date(ts);
+      if (isNaN(d)) return ts;
+      return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) +
+        ' · ' + d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    } catch(e){ return ts; }
+  }
+
+  let map, markers = [];
+
+  function initMap() {
+    map = L.map('map', { zoomControl:true }).setView([12.1165,-61.6789], 11);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution:'© OpenStreetMap © CARTO', maxZoom:18
+    }).addTo(map);
+  }
+
+  function clearMarkers(){ markers.forEach(m=>map.removeLayer(m)); markers=[]; }
+
+  function addMarker(r) {
+    const s = STATUS[r.status]||STATUS.unknown;
+    const icon = L.divIcon({
+      className:'',
+      html:`<div style="position:relative;width:32px;height:32px;">
+        <div style="position:absolute;top:50%;left:50%;width:22px;height:22px;border-radius:50%;background:${s.color};opacity:.2;animation:pulse-ring 2s infinite;"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:50%;background:${s.color};border:2.5px solid #1a2840;box-shadow:0 1px 6px rgba(0,0,0,.5);"></div>
+      </div>`,
+      iconSize:[32,32], iconAnchor:[16,16]
+    });
+    const m = L.marker(r.coords, {icon}).addTo(map)
+      .bindPopup(`<div style="font-family:system-ui;min-width:140px;">
+        <b style="font-size:13px;color:#e8eaf0;">${r.community}</b><br>
+        <span style="font-size:12px;color:#6b82a0;">${r.parish}</span><br>
+        <span style="color:${s.color};font-size:12px;font-weight:500;">${s.label}</span><br>
+        <span style="font-size:11px;color:#4a5a75;">${r.days}</span>
+      </div>`);
+    markers.push(m);
+  }
+
+  function renderFeed(reports) {
+    const feed = document.getElementById('feed');
+    if (!reports.length) {
+      feed.innerHTML = '<p style="font-size:13px;color:#4a5a75;padding:8px 0;">No reports yet.</p>';
+      return;
+    }
+    feed.innerHTML = reports.map(r => {
+      const s = STATUS[r.status]||STATUS.unknown;
+      return `<div class="report-row">
+        <div class="report-top">
+          <div>
+            <span class="community-name">${r.community}</span>
+            <span class="parish-name">${r.parish}</span>
+          </div>
+          <span class="badge ${s.badge}">${s.label}</span>
+        </div>
+        <div class="report-meta">${r.days}${r.elevation?' · '+r.elevation:''} · ${r.time}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderStats(reports) {
+    const parishes = new Set(reports.map(r=>r.parish.toLowerCase())).size;
+    const noWater  = reports.filter(r=>r.status==='no_water').length;
+    const longOut  = reports.filter(r=>(r.days||'').includes('7')).length;
+    document.getElementById('sTotal').textContent  = reports.length;
+    document.getElementById('sParish').textContent = parishes;
+    document.getElementById('sNone').textContent   = noWater;
+    document.getElementById('sLong').textContent   = longOut;
+  }
+
+  function loadData() {
+    document.getElementById('feedStatus').textContent = 'Refreshing...';
+    Papa.parse(CSV_URL, {
+      download:true, header:true, skipEmptyLines:true,
+      complete(results) {
+        clearMarkers();
+        const reports = results.data.map(row => {
+          const community = row['Your Community/Area']||row['Your Community/Ar']||'';
+          const parish    = row['Parish']||'';
+          const statusRaw = row['Water Status Right Now']||row['Water Status Right N']||row['Water Status Right Now?']||'';
+          const days      = row['How many days without water?']||row['How many days witho']||'';
+          const elevation = row['Elevation']||'';
+          const timestamp = row['Timestamp']||'';
+          return {
+            community, parish,
+            status: getStatus(statusRaw),
+            days, elevation,
+            time: formatTime(timestamp),
+            coords: getCoords(community, parish)
+          };
+        });
+        reports.forEach(r=>addMarker(r));
+        renderFeed(reports);
+        renderStats(reports);
+        document.getElementById('feedStatus').textContent =
+          `Live · ${reports.length} report${reports.length!==1?'s':''}`;
+      },
+      error() {
+        document.getElementById('feedStatus').textContent = 'Error loading data';
+        document.getElementById('feed').innerHTML =
+          '<p style="font-size:13px;color:#e05555;padding:8px 0;">Could not load data. Check sheet permissions.</p>';
+      }
+    });
+  }
+
+  initMap();
+  loadData();
+</script>
+</body>
+</html>
