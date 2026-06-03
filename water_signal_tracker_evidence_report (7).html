@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Signal Tracker™ — First Evidence Report</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', Helvetica, sans-serif;
+  background: #08111F;
+  color: #F0F4FF;
+  padding: 0;
+}
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 40px;
+}
+
+/* HEADER */
+.header {
+  border-bottom: 3px solid #F5A623;
+  padding-bottom: 32px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-left .eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #F5A623;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.header-left h1 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #F0F4FF;
+  line-height: 1.1;
+}
+
+.header-left h1 span { color: #F5A623; }
+
+.header-right {
+  text-align: right;
+  font-size: 12px;
+  color: #6B7FA3;
+  line-height: 1.8;
+}
+
+.header-right strong {
+  color: #F0F4FF;
+  display: block;
+  font-size: 13px;
+}
+
+/* INTRO */
+.intro {
+  background: #0D1C2E;
+  border-left: 4px solid #F5A623;
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 40px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #F0F4FF;
+}
+
+.intro strong { color: #F5A623; }
+
+/* STAT GRID */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: #0D1C2E;
+  border: 1px solid #132338;
+  border-radius: 8px;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.stat-card .label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #6B7FA3;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.stat-card .number {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #F5A623;
+  line-height: 1;
+}
+
+.stat-card .number.red { color: #FF4B4B; }
+.stat-card .number.teal { color: #00C9B1; }
+
+.stat-card .sub {
+  font-size: 11px;
+  color: #6B7FA3;
+  margin-top: 6px;
+}
+
+/* SECTION TITLE */
+.section-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #F5A623;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #F5A623;
+}
+
+/* KEY FINDINGS */
+.findings { margin-bottom: 40px; }
+
+.finding-item {
+  background: #0D1C2E;
+  border: 1px solid #132338;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.finding-number {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #F5A623;
+  min-width: 36px;
+}
+
+.finding-content .title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #F0F4FF;
+  margin-bottom: 4px;
+}
+
+.finding-content .detail {
+  font-size: 13px;
+  color: #6B7FA3;
+  line-height: 1.6;
+}
+
+.finding-content .detail strong { color: #00C9B1; }
+
+/* SIGNAL FEED TABLE */
+.signal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+  font-size: 13px;
+}
+
+.signal-table th {
+  background: #0D1C2E;
+  color: #F5A623;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 2px solid #F5A623;
+}
+
+.signal-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #132338;
+  color: #F0F4FF;
+  vertical-align: middle;
+}
+
+.signal-table tr:hover td { background: #0D1C2E; }
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge.no-water { background: rgba(255,75,75,0.2); color: #FF4B4B; border: 1px solid #FF4B4B; }
+.badge.weak { background: rgba(245,166,35,0.2); color: #F5A623; border: 1px solid #F5A623; }
+.badge.intermittent { background: rgba(0,201,177,0.15); color: #00C9B1; border: 1px solid #00C9B1; }
+.badge.normal { background: rgba(0,201,177,0.2); color: #00C9B1; border: 1px solid #00C9B1; }
+
+.duration-critical { color: #FF4B4B; font-weight: 700; }
+.duration-moderate { color: #F5A623; font-weight: 600; }
+.duration-ok { color: #00C9B1; }
+
+/* VOICE BOX */
+.voice-section { margin-bottom: 40px; }
+
+.voice-card {
+  background: #0D1C2E;
+  border-left: 4px solid #00C9B1;
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin-bottom: 12px;
+}
+
+.voice-card .quote {
+  font-size: 14px;
+  color: #F0F4FF;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.voice-card .attribution {
+  font-size: 11px;
+  color: #6B7FA3;
+}
+
+/* 14-DAY SUPPLY TIMELINE */
+.timeline-section { margin-bottom: 40px; }
+
+.timeline-intro {
+  background: #0D1C2E;
+  border-left: 4px solid #F5A623;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #F0F4FF;
+}
+
+.timeline-card {
+  background: #0D1C2E;
+  border: 1px solid #132338;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.timeline-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #F5A623;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.tday { text-align: center; }
+
+.tdate {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6B7FA3;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.ttile {
+  border-radius: 6px;
+  padding: 10px 4px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.ttile.no-water {
+  background: rgba(255,75,75,0.25);
+  color: #FF4B4B;
+  border: 1px solid rgba(255,75,75,0.5);
+}
+
+.ttile.water {
+  background: rgba(0,201,177,0.25);
+  color: #00C9B1;
+  border: 1px solid rgba(0,201,177,0.5);
+}
+
+.ttile.partial {
+  background: rgba(245,166,35,0.2);
+  color: #F5A623;
+  border: 1px solid rgba(245,166,35,0.5);
+}
+
+.timeline-finding {
+  font-size: 13px;
+  color: #6B7FA3;
+  line-height: 1.6;
+  padding-top: 16px;
+  border-top: 1px solid #132338;
+}
+
+/* PATTERN ANALYSIS */
+.pattern-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.pattern-card {
+  background: #0D1C2E;
+  border: 1px solid #132338;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.pattern-card .pattern-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #F5A623;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.pattern-card ul { list-style: none; padding: 0; }
+
+.pattern-card ul li {
+  font-size: 13px;
+  color: #F0F4FF;
+  padding: 6px 0;
+  border-bottom: 1px solid #132338;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pattern-card ul li:last-child { border-bottom: none; }
+
+.bar-wrap { display: flex; align-items: center; gap: 8px; }
+
+.bar { height: 6px; border-radius: 3px; background: #F5A623; }
+.bar.red { background: #FF4B4B; }
+.bar.teal { background: #00C9B1; }
+
+/* ── COMMUNITY IMPACT DURATION HISTORY ── */
+.cid-section { margin-bottom: 40px; }
+
+.cid-intro {
+  font-size: 13px;
+  color: #6B7FA3;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.cid-event {
+  background: #0D1C2E;
+  border: 1px solid #132338;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.cid-event-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #132338;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cid-event-left { display: flex; align-items: center; gap: 14px; }
+
+.cid-event-num {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #6B7FA3;
+  text-transform: uppercase;
+}
+
+.cid-event-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #F0F4FF;
+}
+
+.cid-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cid-status-badge.active {
+  background: rgba(255,75,75,0.15);
+  color: #FF4B4B;
+  border: 1px solid #FF4B4B;
+}
+
+.cid-status-badge.resolved {
+  background: rgba(0,201,177,0.12);
+  color: #00C9B1;
+  border: 1px solid #00C9B1;
+}
+
+.cid-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FF4B4B;
+  animation: blink-red 1.5s infinite;
+}
+
+@keyframes blink-red {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.cid-event-body {
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.cid-meta-item .meta-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #6B7FA3;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.cid-meta-item .meta-value {
+  font-size: 13px;
+  color: #F0F4FF;
+}
+
+.cid-counter-display {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.cid-counter-num {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #FF4B4B;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cid-counter-sep {
+  font-size: 1.4rem;
+  color: #132338;
+  line-height: 1.3;
+  font-weight: 300;
+}
+
+.cid-counter-unit {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #6B7FA3;
+  text-transform: uppercase;
+  padding-bottom: 5px;
+  margin-left: 1px;
+}
+
+/* Future event placeholder */
+.cid-future {
+  background: #0D1C2E;
+  border: 1px dashed #132338;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #3A4F6A;
+}
+
+/* ── END COMMUNITY IMPACT DURATION ── */
+
+/* CALL TO ACTION */
+.cta-box {
+  background: #F5A623;
+  border-radius: 8px;
+  padding: 28px 32px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.cta-box h3 {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #08111F;
+  margin-bottom: 10px;
+}
+
+.cta-box p {
+  font-size: 14px;
+  color: #08111F;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.cta-box .cta-links {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-btn-primary {
+  display: inline-block;
+  background: #08111F;
+  color: #F5A623;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.cta-btn-primary:hover { opacity: 0.85; }
+
+.cta-btn-secondary {
+  display: inline-block;
+  background: transparent;
+  color: #08111F;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: 2px solid #08111F;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.cta-btn-secondary:hover { background: rgba(8,17,31,0.1); }
+
+/* FOOTER */
+.footer {
+  border-top: 2px solid #F5A623;
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer .brand { font-size: 13px; font-weight: 700; color: #F5A623; }
+
+.footer .contact {
+  font-size: 11px;
+  color: #6B7FA3;
+  text-align: right;
+  line-height: 1.8;
+}
+
+.confidential {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #FF4B4B;
+  text-align: center;
+  margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="eyebrow">Community Intelligence System</div>
+      <h1>Water Signal <span>Tracker™</span><br>First Evidence Report</h1>
+    </div>
+    <div class="header-right">
+      <strong>Prepared by Sharon L. Simmons</strong>
+      Founder & Chief Innovation Officer<br>
+      SYGNL Technologies™<br>
+      Grenada, West Indies<br>
+      May 28, 2026
+    </div>
+  </div>
+
+  <!-- CONFIDENTIAL -->
+  <div class="confidential">⚠ Confidential — Pilot Intelligence Summary — Methodology Withheld Pending Funded Agreement</div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    This report documents the first 16 community-generated water signal reports collected between <strong>May 15–June 2, 2026</strong> across Grenada parishes. Data was submitted voluntarily by residents through the Water Signal Tracker™ community reporting platform. This pilot demonstrates the existence of a critical <strong>real-time water intelligence gap</strong> between utility-declared schedules and actual household-level water access — a gap this system is uniquely designed to close.
+  </div>
+
+  <!-- STAT GRID -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="label">Total Reports</div>
+      <div class="number">16</div>
+      <div class="sub">May 15–Jun 2, 2026</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Parishes Covered</div>
+      <div class="number teal">2</div>
+      <div class="sub">St. George's · St. John's</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">No Water Reports</div>
+      <div class="number red">9</div>
+      <div class="sub">60% of all submissions</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Critical Duration</div>
+      <div class="number red">4</div>
+      <div class="sub">7+ days or over a month</div>
+    </div>
+  </div>
+
+  <!-- KEY FINDINGS -->
+  <div class="findings">
+    <div class="section-title">Key Signal Findings</div>
+
+    <div class="finding-item">
+      <div class="finding-number">01</div>
+      <div class="finding-content">
+        <div class="title">St. George's is the Crisis Concentration Zone</div>
+        <div class="detail">10 of 11 reports (91%) came from St. George's parish. <strong>6 communities reported zero water access</strong> — not reduced supply, zero access. This confirms St. George's as the highest-pressure failure zone in the current outage cycle.</div>
+      </div>
+    </div>
+
+    <div class="finding-item">
+      <div class="finding-number">02</div>
+      <div class="finding-content">
+        <div class="title">Elevation Drives Severity — Hilltop Communities Hit Hardest</div>
+        <div class="detail">100% of "No Water" reports came from hilltop or hillside communities. <strong>Mt. Parnassus, St. Paul's, La Borie, and Morne Delice</strong> — all elevated — reported the longest durations without water. This confirms the pressure-zone imbalance pattern predicted by infrastructure analysis.</div>
+      </div>
+    </div>
+
+    <div class="finding-item">
+      <div class="finding-number">03</div>
+      <div class="finding-content">
+        <div class="title">Duration Severity Is Alarming — "Over a Month" Reports Documented</div>
+        <div class="detail"><strong>3 communities reported water outages exceeding one month</strong> — Morne Delice, La Borie (x2). This exceeds routine dry season management and signals a systemic supply failure, not a temporary valve regulation event.</div>
+      </div>
+    </div>
+
+    <div class="finding-item">
+      <div class="finding-number">04</div>
+      <div class="finding-content">
+        <div class="title">Notice Accuracy Gap Confirmed</div>
+        <div class="detail">NAWASA's published valve regulation schedule declared supply availability from 5:00 a.m.–3:00 p.m. daily. <strong>Community reports submitted during that window show zero water access</strong> — confirming a measurable gap between declared supply and actual household delivery.</div>
+      </div>
+    </div>
+
+    <div class="finding-item">
+      <div class="finding-number">05</div>
+      <div class="finding-content">
+        <div class="title">Flatland Communities Show Mixed Results</div>
+        <div class="detail">Calliste (flatland) reported weak pressure while River Road (flatland) reported normal flow — confirming that proximity to supply source and pipe routing, not elevation alone, affects distribution. <strong>This data point supports pressure-zone engineering as a targeted intervention.</strong></div>
+      </div>
+    </div>
+    <div class="finding-item">
+      <div class="finding-number">06</div>
+      <div class="finding-content">
+        <div class="title">NAWASA Proactive Outreach Confirmed — Reactive Delivery Model Documented</div>
+        <div class="detail">On May 29, 2026, a Morne Delice resident reported that <strong>NAWASA contacted them directly by phone to offer a water truck delivery</strong> — tank or barrel top-up by delivery truck. This is a significant operational intelligence finding. It confirms that NAWASA has awareness of supply failures at the community level and is managing them through reactive delivery rather than supply restoration. <strong>The gap is not knowledge — it is operational response design.</strong> Water delivery by truck is a temporary mitigation measure, not a systemic solution. This finding distinguishes the Morne Delice situation from an unacknowledged infrastructure failure and points directly to a need for a permanent operational intelligence layer to support proactive distribution planning.</div>
+      </div>
+    </div>
+
+    <div class="finding-item">
+      <div class="finding-number">07</div>
+      <div class="finding-content">
+        <div class="title">June 2 — Manual Valve Control Confirmed at Morne Delice</div>
+        <div class="detail">On June 2, 2026, Morne Delice documented three separate supply events in a single day — 10:40 AM (pulsating/intermittent), 2:30–4:30 PM (trickle, 2 hours), and 8:00–10:00 PM (strong flow, 2 hours then off). <strong>Strong pressure at 8:00 PM followed by complete cutoff at 10:00 PM confirms manual valve operation — not a pressure or infrastructure failure.</strong> Water supply is physically available but being restricted at the valve level. This distinguishes the Morne Delice situation from an infrastructure failure and points directly to an operational scheduling gap.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNAL FEED -->
+  <div class="section-title">Full Signal Feed — 16 Community Reports</div>
+  <table class="signal-table">
+    <thead>
+      <tr>
+        <th>Community</th>
+        <th>Parish</th>
+        <th>Status</th>
+        <th>Duration</th>
+        <th>Elevation</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Mt. Parnassus</td><td>St. George's</td><td><span class="badge no-water">No Water</span></td><td class="duration-critical">7+ days</td><td>Hilltop / Hillside</td><td>May 15</td></tr>
+      <tr><td>Calliste</td><td>St. George's</td><td><span class="badge weak">Weak Pressure</span></td><td class="duration-ok">1–3 days</td><td>Flatland</td><td>May 15</td></tr>
+      <tr><td>Laborie</td><td>St. George's</td><td><span class="badge no-water">No Water</span></td><td class="duration-moderate">4–7 days</td><td>Flatland</td><td>May 15</td></tr>
+      <tr><td>St. Paul's</td><td>St. George's</td><td><span class="badge no-water">No Water</span></td><td class="duration-critical">7+ days</td><td>Hilltop</td><td>May 15</td></tr>
+      <tr><td>Morne Delice</td><td>St. George's</td><td><span class="badge no-water">No Water</span></td><td class="duration-critical">Over a month</td><td>Hillside</td><td>May 15</td></tr>
+      <tr><td>Gouyave</td><td>St. John's</td><td><span class="badge normal">Normal Flow</span></td><td class="duration-ok">Less than 1 day</td><td>Hillside</td><td>May 17</td></tr>
+      <tr><td>Happy Hill</td><td>St. George's</td><td><span class="badge normal">Normal Flow</span></td><td>—</td><td>Hillside</td><td>May 17</td></tr>
+      <tr><td>La Borie</td><td>St. George's</td><td><span class="badge no-water">No Water</span></td><td class="duration-critical">Over a month</td><td>Hilltop</td><td>May 17</td></tr>
+      <tr><td>La Borie</td><td>St. George's</td><td><span class="badge no-water">No Water</span></td><td class="duration-critical">Over a month</td><td>Hilltop</td><td>May 17</td></tr>
+      <tr><td>La Mode / St. George's Estate</td><td>St. George's</td><td><span class="badge intermittent">Intermittent</span></td><td class="duration-ok">1–3 days</td><td>Not confirmed</td><td>May 22</td></tr>
+      <tr><td>River Road</td><td>St. George's</td><td><span class="badge normal">Normal Flow</span></td><td class="duration-ok">Less than 1 day</td><td>Flatland</td><td>May 22</td></tr>
+      <tr style="background:rgba(245,166,35,0.04);">
+        <td><strong>Morne Delice</strong></td>
+        <td>St. George's</td>
+        <td><span class="badge weak">Partial — 3H</span></td>
+        <td class="duration-moderate">3 hours only<br><span style="font-size:10px;color:#6B7FA3;">3:00 PM–6:00 PM AST</span></td>
+        <td>Hillside</td>
+        <td><strong style="color:#F5A623;">May 31</strong></td>
+      </tr>
+      <tr style="background:rgba(0,201,177,0.04);">
+        <td><strong>Morne Delice</strong></td>
+        <td>St. George's</td>
+        <td><span class="badge intermittent">NAWASA Outreach</span></td>
+        <td class="duration-critical">Over a month<br><span style="font-size:10px;color:#6B7FA3;">NAWASA called offering water truck delivery</span></td>
+        <td>Hillside</td>
+        <td><strong style="color:#00C9B1;">May 29</strong></td>
+      </tr>
+        <td class="duration-moderate">Tickle of water<br><span style="font-size:10px;color:#6B7FA3;">10:40 AM AST · Off/on pressure · First flow since May 28</span></td>
+        <td>Hillside</td>
+        <td><strong style="color:#F5A623;">Jun 2</strong></td>
+      </tr>
+      <tr style="background:rgba(255,75,75,0.04);">
+        <td><strong>Bay Gardens</strong></td>
+        <td>St. George's</td>
+        <td><span class="badge no-water">No Water</span></td>
+        <td class="duration-moderate">4–7 days</td>
+        <td>Hillside</td>
+        <td><strong style="color:#F5A623;">Jun 1</strong></td>
+      </tr>
+      <tr style="background:rgba(255,75,75,0.04);">
+        <td><strong>St. Paul's</strong></td>
+        <td>St. George's</td>
+        <td><span class="badge no-water">No Water</span></td>
+        <td class="duration-ok">Less than 1 day</td>
+        <td>Hilltop</td>
+        <td><strong style="color:#F5A623;">Jun 2</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- COMMUNITY VOICES -->
+  <div class="voice-section">
+    <div class="section-title">Community Voice — Direct Submissions</div>
+    <div class="voice-card">
+      <div class="quote">"This is inhumane and needs to be a State of Emergency."</div>
+      <div class="attribution">Morne Delice, St. George's — Over 1 month without water · Hillside elevation</div>
+    </div>
+    <div class="voice-card">
+      <div class="quote">"This is inhumane & unsanitary."</div>
+      <div class="attribution">St. Paul's, St. George's — 7+ days without water · Hilltop elevation</div>
+    </div>
+    <div class="voice-card">
+      <div class="quote">"We need that water it's very hard."</div>
+      <div class="attribution">La Borie, St. George's — Over 1 month without water · Hilltop elevation</div>
+    </div>
+    <div class="voice-card">
+      <div class="quote">"Water comes every other day or two, sometimes for a few hours or the entire time. Pressure is usually normal, with some days being a bit low."</div>
+      <div class="attribution">La Mode / St. George's Estate — Intermittent supply · May 22, 2026</div>
+    </div>
+  </div>
+
+  <!-- 14-DAY SUPPLY TIMELINE -->
+  <div class="timeline-section">
+    <div class="section-title">Longitudinal Field Documentation — Morne Delice</div>
+    <div class="timeline-intro">
+      The following longitudinal field documentation from <strong style="color:#F5A623">Morne Delice, St. George's (Hillside elevation)</strong> represents the most detailed single-community water access record in this pilot. It reveals a pattern that goes beyond seasonal shortage — exposing an undisclosed valve rotation cycle delivering critically insufficient supply windows to affected households.
+    </div>
+    <div class="timeline-card">
+      <div class="timeline-label">19-DAY SUPPLY TIMELINE — MAY 15–JUNE 2, 2026</div>
+      <div class="timeline-grid" style="grid-template-columns: repeat(7, 1fr);">
+        <div class="tday">
+          <div class="tdate">May 15</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 16</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 17</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 18</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 19</div>
+          <div class="ttile water">WATER 24H</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 20</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 21</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 22</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 23</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 24</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 25</div>
+          <div class="ttile water">WATER 24H</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 26</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 27</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 28</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 29</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 30</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">May 31</div>
+          <div class="ttile partial">WATER 3H</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">Jun 1</div>
+          <div class="ttile no-water">NO WATER</div>
+        </div>
+        <div class="tday">
+          <div class="tdate">Jun 2</div>
+          <div class="ttile partial">PULSATING</div>
+        </div>
+      </div>
+      <div class="timeline-legend" style="display:flex;gap:16px;margin:12px 0 14px;flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:6px;font-size:10px;color:#6B7FA3;">
+          <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(255,75,75,0.25);border:1px solid rgba(255,75,75,0.5);"></span>No Water
+        </span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:10px;color:#6B7FA3;">
+          <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(0,201,177,0.25);border:1px solid rgba(0,201,177,0.5);"></span>Water 24H
+        </span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:10px;color:#6B7FA3;">
+          <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(245,166,35,0.25);border:1px solid rgba(245,166,35,0.5);"></span>Partial Window (3H)
+        </span>
+      </div>
+      <div class="timeline-finding">
+        <span style="color:#FF4B4B;font-weight:800;">Pattern confirmed and escalating:</span> 2 full-day supply windows + multiple short windows across 19 days. June 2 alone documented three separate supply events at Morne Delice — 10:40 AM (pulsating/intermittent), 2:30–4:30 PM (trickle, 2 hours), and 8:00–10:00 PM (strong flow, 2 hours then off). Strong pressure followed by complete cutoff confirms manual valve control — not infrastructure failure. Supply is available but being restricted. Cycle interval remains 6–7 days for sustained flow. Short windows are increasing in frequency but not duration.
+      </div>
+    </div>
+  </div>
+
+  <!-- PATTERN ANALYSIS -->
+  <div class="section-title">Pattern Analysis</div>
+  <div class="pattern-grid">
+    <div class="pattern-card">
+      <div class="pattern-label">Status Distribution</div>
+      <ul>
+        <li>No Water <div class="bar-wrap"><div class="bar red" style="width:80px"></div> 6 reports</div></li>
+        <li>Normal Flow <div class="bar-wrap"><div class="bar teal" style="width:40px"></div> 3 reports</div></li>
+        <li>Intermittent <div class="bar-wrap"><div class="bar" style="width:16px"></div> 1 report</div></li>
+        <li>Weak Pressure <div class="bar-wrap"><div class="bar" style="width:16px"></div> 1 report</div></li>
+      </ul>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-label">Elevation vs. Severity</div>
+      <ul>
+        <li>Hilltop → No Water <div class="bar-wrap"><div class="bar red" style="width:80px"></div> 100%</div></li>
+        <li>Hillside → Mixed <div class="bar-wrap"><div class="bar" style="width:50px"></div> 50/50</div></li>
+        <li>Flatland → Mixed <div class="bar-wrap"><div class="bar teal" style="width:40px"></div> Varied</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── COMMUNITY IMPACT DURATION™ HISTORY ── -->
+  <div class="cid-section">
+    <div class="section-title">Community Impact Duration™ History</div>
+    <p class="cid-intro">
+      Community Impact Duration™ measures the documented length of a disruption cycle from first confirmed community signal to restoration. Each event is logged here as a permanent record of impact — the gap between declared service and actual household access.
+    </p>
+
+    <!-- EVENT #1 — ACTIVE -->
+    <div class="cid-event">
+      <div class="cid-event-header">
+        <div class="cid-event-left">
+          <span class="cid-event-num">Event #1</span>
+          <span class="cid-event-name">Current Disruption Cycle — Multi-Parish</span>
+        </div>
+        <span class="cid-status-badge active">
+          <span class="cid-status-dot"></span>
+          Active
+        </span>
+      </div>
+      <div class="cid-event-body">
+        <div class="cid-meta-item">
+          <div class="meta-label">Anchor Date</div>
+          <div class="meta-value">May 28, 2026 · 2:00 PM AST</div>
+        </div>
+        <div class="cid-meta-item">
+          <div class="meta-label">Primary Zone</div>
+          <div class="meta-value">St. George's Parish · Hilltop Communities</div>
+        </div>
+        <div class="cid-meta-item">
+          <div class="meta-label">Duration · Counting</div>
+          <div class="cid-counter-display">
+            <div>
+              <span class="cid-counter-num" id="ev1-days">—</span>
+              <span class="cid-counter-unit">d</span>
+            </div>
+            <span class="cid-counter-sep">:</span>
+            <div>
+              <span class="cid-counter-num" id="ev1-hours">—</span>
+              <span class="cid-counter-unit">h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FUTURE EVENTS PLACEHOLDER -->
+    <div class="cid-future">
+      <span style="font-size:18px;display:block;margin-bottom:6px;color:#1e3a55;">+</span>
+      Future disruption events will be logged here as the platform scales across all 6 parishes.
+    </div>
+  </div>
+  <!-- ── END COMMUNITY IMPACT DURATION™ ── -->
+
+  <!-- CTA BOX -->
+  <div class="cta-box">
+    <h3>This Is a 90-Day Pilot. The Intelligence Layer Is Live.</h3>
+    <p>Water Signal Tracker™ is currently collecting community data across Grenada parishes at no cost to government or utility partners. This report represents Week 1. A funded 90-day pilot would expand coverage to all 6 parishes, produce monthly intelligence reports, and build the evidentiary foundation for infrastructure intervention and resilience investment.</p>
+    <div class="cta-links">
+      <a href="https://forms.gle/5eNmwgihWszuUP7NA" target="_blank" class="cta-btn-primary">+ Submit a Report</a>
+      <a href="https://shay08.github.io/water-signal-tracker/" target="_blank" class="cta-btn-secondary">View Live Tracker →</a>
+      <a href="https://whatsapp.com/channel/0029VbDJdL729753vNvdGU1T" target="_blank" class="cta-btn-secondary">💧 Follow on WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="brand">Water Signal Tracker™ · SYGNL Technologies™</div>
+    <div class="contact">
+      Sharon L. Simmons · Founder & Chief Innovation Officer<br>
+      ssimmons1008@gmail.com · +1 (473) 414-6509 · sygnltech.com
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Community Impact Duration™ Counter — Event #1
+  // Anchor: May 28, 2026 at 2:00 PM AST (UTC-4 = 18:00 UTC)
+  const EV1_ANCHOR = new Date('2026-05-28T18:00:00Z');
+
+  function updateEv1Counter() {
+    const now = new Date();
+    const diff = now - EV1_ANCHOR;
+    if (diff < 0) {
+      document.getElementById('ev1-days').textContent = '0';
+      document.getElementById('ev1-hours').textContent = '00';
+      return;
+    }
+    const totalHours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(totalHours / 24);
+    const hours = totalHours % 24;
+    document.getElementById('ev1-days').textContent = days;
+    document.getElementById('ev1-hours').textContent = String(hours).padStart(2, '0');
+  }
+
+  updateEv1Counter();
+  setInterval(updateEv1Counter, 60000);
+</script>
+</body>
+</html>
