@@ -579,8 +579,11 @@
   function renderStats(reports) {
     const parishes = new Set(reports.map(r=>r.parish.toLowerCase())).size;
     const noWater  = reports.filter(r=>r.status==='no_water').length;
-    const longOut  = reports.filter(r=>(r.days||'').includes('7')).length;
-    document.getElementById('sTotal').textContent  = reports.length;
+const longOut = reports.filter(r=>{
+  const d = (r.days || '').toLowerCase();
+  return d.includes('7') || d.includes('over') || d.includes('month');
+}).length;
+     document.getElementById('sTotal').textContent  = reports.length;
     document.getElementById('sParish').textContent = parishes;
     document.getElementById('sNone').textContent   = noWater;
     document.getElementById('sLong').textContent   = longOut;
