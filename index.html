@@ -576,19 +576,20 @@
     }).join('');
   }
 
-  function renderStats(reports) {
-    const parishes = new Set(reports.map(r=>r.parish.toLowerCase())).size;
-    const noWater  = reports.filter(r=>r.status==='no_water').length;
-const longOut = reports.filter(r=>{
-  const d = (r.days || '').toLowerCase();
-  return d.includes('7') || d.includes('over') || d.includes('month');
-}).length;
-     document.getElementById('sTotal').textContent  = reports.length;
-    document.getElementById('sParish').textContent = parishes;
-    document.getElementById('sNone').textContent   = noWater;
-    document.getElementById('sLong').textContent   = longOut;
-  }
+  async function renderStats(reports) {
+  try {
+    const response = await fetch('water-stats.json?cache=' + Date.now());
+    const stats = await response.json();
 
+    document.getElementById('sTotal').textContent = stats.totalReports;
+    document.getElementById('sParish').textContent = stats.parishesImpacted;
+    document.getElementById('sNone').textContent = stats.noWaterPercent + '%';
+    document.getElementById('sLong').textContent = stats.longestOutage;
+  } catch (error) {
+    console.error('Could not load water-stats.json', error);
+  }
+}
+   
   function loadData() {
     document.getElementById('feedStatus').textContent = 'Refreshing...';
     Papa.parse(CSV_URL, {
