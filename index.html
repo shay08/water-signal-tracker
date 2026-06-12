@@ -583,8 +583,8 @@
 
     document.getElementById('sTotal').textContent = stats.totalReports;
     document.getElementById('sParish').textContent = stats.parishesImpacted;
-    document.getElementById('sNone').textContent = stats.noWaterPercent + '%';
-    document.getElementById('sLong').textContent = stats.longestOutage;
+    document.getElementById('sNone').textContent = stats.noWaterReports;
+    document.getElementById('sLong').textContent = stats.longOutReports;
   } catch (error) {
     console.error('Could not load water-stats.json', error);
   }
