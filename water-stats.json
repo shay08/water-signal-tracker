@@ -1,8 +1,8 @@
 {
   "totalReports": 37,
   "noWaterReports": 17,
-  "noWaterPercent": 46,
-  "parishesImpacted": 4,
+  "parishesImpacted": 3,
+  "longOutReports": 20,
   "longestOutage": "7+ days",
   "lastUpdated": "2026-06-12 11:52 AM"
 }
